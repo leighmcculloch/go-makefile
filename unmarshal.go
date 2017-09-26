@@ -6,7 +6,11 @@ import (
 	"regexp"
 )
 
-var targetRegex = regexp.MustCompile(`(?P<Target>\w+):`)
+var targetRegex = regexp.MustCompile(`^(?P<Target>[\w.]+):`)
+
+var targetExcludes = map[string]bool{
+	".PHONY": true,
+}
 
 func Unmarshal(r io.Reader) (Makefile, error) {
 	m := Makefile{}
@@ -17,7 +21,11 @@ func Unmarshal(r io.Reader) (Makefile, error) {
 		l := s.Text()
 		matches := targetRegex.FindStringSubmatch(l)
 		if len(matches) > 0 {
-			t := Target{Name: matches[1]}
+			tn := matches[1]
+			if targetExcludes[tn] {
+				continue
+			}
+			t := Target{Name: tn}
 			m.Targets = append(m.Targets, t)
 		}
 	}
