@@ -1,0 +1,9 @@
+language: go
+
+go_import_path: 4d63.com/makefile
+
+script:
+  - go test -coverprofile=coverage.txt -bench=. -benchmem
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
