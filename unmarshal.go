@@ -12,6 +12,7 @@ var targetExcludes = map[string]bool{
 	".PHONY": true,
 }
 
+// Unmarshal parses the reader into a Makefile struct.
 func Unmarshal(r io.Reader) (Makefile, error) {
 	m := Makefile{}
 
